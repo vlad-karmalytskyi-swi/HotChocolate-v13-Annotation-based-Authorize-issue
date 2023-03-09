@@ -2,8 +2,10 @@ using HotChocolate.Authorization;
 using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAuthorization();
 builder.Services
     .AddGraphQLServer()
+    .AddAuthorization()
     .AddQueryType<Query>();
 
 var app = builder.Build();
@@ -13,15 +15,6 @@ app.Run();
 
 public class Startup
 {
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddAuthorization();
-        services
-            .AddGraphQLServer()
-            .AddAuthorization()
-            .AddQueryType<Query>();
-    }
-
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseRouting();
@@ -35,15 +28,6 @@ public class Startup
         });
     }
 }
-
-//public class UserType : ObjectType<User>
-//{
-//    protected override void Configure(IObjectTypeDescriptor<User> descriptor)
-//    {
-//        descriptor.Authorize();
-//        descriptor.Field(f => f.Age).Authorize();
-//    }
-//}
 
 [Authorize]
 public class User
